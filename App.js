@@ -1,20 +1,12 @@
 import React from 'react';
-import {
-  StatusBar
-} from 'react-native';
-import { connect, Provider } from 'react-redux';
-import {
-  createStore,
-  combineReducers,
-  applyMiddleware
-} from '@reduxjs/toolkit';
-
-import thunk from 'redux-thunk';
-
+import { StatusBar } from 'react-native';
+import { Provider } from 'react-redux';
+import { createStore } from '@reduxjs/toolkit';
 import themeReducer from './redux/themeReducer';
-import { switchTheme } from './redux/themeActions';
+import { RootStack } from './src/rootStack';
+import { NavigationContainer } from '@react-navigation/native';
 import Home from './src/homeScreen';
-
+import { StackContainer } from './src/rootStack'
 const store = createStore(themeReducer);
 
 const App = () => {
@@ -22,7 +14,9 @@ const App = () => {
     <>
       <Provider store={store}>
         <StatusBar barStyle="light-content" />
-        <Home></Home>
+        <NavigationContainer>
+          <StackContainer></StackContainer>
+        </NavigationContainer>
       </Provider>
     </>
   );

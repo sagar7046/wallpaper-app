@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     View,
     StyleSheet,
-    Text, Button, TouchableOpacity, ScrollView, FlatList, RefreshControl
+    Text, Button, TouchableOpacity, ScrollView, FlatList, RefreshControl, ToastAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
@@ -22,20 +22,37 @@ const date = new Date().getDate();
 const CURRENT_DATE = `${day[0].value.toUpperCase()}, ${month[0].value.toUpperCase()} ${date}`;
 const ICON_SIZE = 25;
 
-class Home extends React.Component {
+class Home extends React.PureComponent {
     state = {
-        userCollection: []
+        userCollection: [],
+        isRefreshing: false,
+        page: 1
     }
-    fetchData = () => {
-        fetch(`${ENDPOINT}photos?client_id=${ACCESS_KEY}`)
+    fetchData = (isRefresh = false) => {
+        console.log(isRefresh);
+        fetch(`${ENDPOINT}photos?page=${this.state.page}&client_id=${ACCESS_KEY}`)
             .then(res => res.json())
             .then(result => {
-                const temp = []
+                const temp = [];
                 result.map(item => temp.push(item));
-                this.setState({
-                    userCollection: temp
-                })
+                if (isRefresh) {
+                    this.setState({
+                        userCollection: temp
+                    })
+                    return true;
+                }
+
+                this.setState((prevState) => ({
+                    userCollection: [...prevState.userCollection, ...temp]
+                }), () => { console.log(this.state.userCollection.length) })
             })
+    }
+
+    refreshData = async () => {
+        this.setState({ isRefreshing: true });
+        await this.fetchData(true);
+        this.setState({ isRefreshing: false })
+        ToastAndroid.show("Refreshed", ToastAndroid.LONG);
     }
 
     componentDidMount() {
@@ -44,6 +61,7 @@ class Home extends React.Component {
     render() {
         const { language, theme } = this.props.theme;
         const { actions } = this.props;
+
         return (
             <View style={[styles.container, { backgroundColor: theme.PRIMARY_BACKGROUND }]} >
                 <View style={styles.headerContainer}>
@@ -51,11 +69,11 @@ class Home extends React.Component {
                         <Text style={[styles.date, { color: theme.PRIMARY_TEXT }]}>
                             {CURRENT_DATE}
                         </Text>
-                        <Text style={[styles.headerText, { color: theme.SECONDARY_TEXT }]}>
+                        <Text style={[styles.headerText, { color: theme.SECONDARY_TEXT }]} onPress={() => this.props.navigation.navigate("view")}>
                             {language.greetingText}
                         </Text>
                     </View>
-                    <View style={{ marginRight: 10 }}>
+                    <View style={{ padding: 10 }}>
                         <TouchableOpacity onPress={() => {
                             if (theme.mode == "dark") {
                                 actions.switchTheme(lightTheme)
@@ -77,12 +95,12 @@ class Home extends React.Component {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                     >
-                        <View style={styles.chips}>
+                        <TouchableOpacity style={styles.chips}>
                             <Text style={[styles.chipText, {
                                 backgroundColor: theme.PRIMARY_TEXT,
                                 color: theme.PRIMARY_BACKGROUND
                             }]}>Nature</Text>
-                        </View>
+                        </TouchableOpacity>
                         <View style={styles.chips}>
                             <Text style={[styles.chipText, {
                                 color: theme.SECONDARY_TEXT
@@ -112,14 +130,25 @@ class Home extends React.Component {
                 </View>
                 {this.state.userCollection.length != 0 ?
                     <FlatList
+                        refreshing={this.state.isRefreshing}
+                        onRefresh={this.refreshData}
                         data={this.state.userCollection}
                         contentContainerStyle={styles.imageList}
                         keyExtractor={(item) => item.id}
-                        renderItem={({ item, index }) => {
-                            return <ImageView data={item} theme={theme}></ImageView>
+                        onEndReached={() => {
+                            this.setState({ page: this.state.page + 1 }, () => {
+                                this.fetchData()
+                            })
                         }}
-                    /> : <></>}
-            </View>
+                        renderItem={({ item, index }) => {
+                            return <ImageView
+                                data={item}
+                                theme={theme}
+                                navigation={this.props.navigation}
+                            ></ImageView>
+                        }}
+                    /> : <></ >}
+            </View >
         )
     }
 }
