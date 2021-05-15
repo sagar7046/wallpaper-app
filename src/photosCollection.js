@@ -1,16 +1,49 @@
 import * as React from 'react';
 import {
     View,
-    FlatList,
     Text,
     StyleSheet,
     SafeAreaView
 } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
+
 import { connect } from 'react-redux';
 import { ListView } from './components/gridCollection';
+import { ENDPOINT, ACCESS_KEY } from '../config/config';
+
 
 class PhotoCollection extends React.PureComponent {
+    componentMounted = false;
+    state = {
+        usersPhotoCollection: []
+    }
+
+    fetchData = (username) => {
+        fetch(`${ENDPOINT}users/${username}/photos?client_id=${ACCESS_KEY}`)
+            .then(res => res.json())
+            .then(result => {
+                const temp = [];
+                result.map(item => temp.push(item));
+                this.setState({
+                    usersPhotoCollection: temp
+                }, () => {
+                    console.log(this.state.usersPhotoCollection[0][0])
+                })
+            })
+    }
+
+    componentDidMount() {
+        const { route } = this.props
+        this.componentMounted = true;
+        if (this.componentMounted) {
+            this.fetchData(route.params.userName);
+        }
+    }
+
+    componentWillUnmount() {
+        this.componentMounted = false
+    }
+
+
     render() {
         const { theme } = this.props.theme;
 
@@ -31,7 +64,7 @@ class PhotoCollection extends React.PureComponent {
                     justifyContent: 'center',
                     flex: 1
                 }}>
-                    <ListView data={[1, 2, 3]} theme={theme}></ListView>
+                    <ListView data={this.state.usersPhotoCollection} theme={theme}></ListView>
                 </SafeAreaView>
             </View>
         )

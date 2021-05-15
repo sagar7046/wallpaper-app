@@ -15,7 +15,8 @@ const App = () => {
       <Provider store={store}>
         <StatusBar barStyle="light-content" />
         <NavigationContainer>
-          <StackContainer></StackContainer>
+          {/* <StackContainer></StackContainer> */}
+          <RootStack></RootStack>
         </NavigationContainer>
       </Provider>
     </>

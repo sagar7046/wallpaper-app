@@ -33,7 +33,9 @@ const ImageView = ({ data, theme, navigation }) => {
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() => navigation.navigate("view")}
+            onPress={() => navigation.navigate("view", {
+                userName: data.user.username
+            })}
         >
             <View style={{
                 width: width - SPACING,

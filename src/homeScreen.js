@@ -69,7 +69,7 @@ class Home extends React.PureComponent {
                         <Text style={[styles.date, { color: theme.PRIMARY_TEXT }]}>
                             {CURRENT_DATE}
                         </Text>
-                        <Text style={[styles.headerText, { color: theme.SECONDARY_TEXT }]} onPress={() => this.props.navigation.navigate("view")}>
+                        <Text style={[styles.headerText, { color: theme.SECONDARY_TEXT }]}>
                             {language.greetingText}
                         </Text>
                     </View>
