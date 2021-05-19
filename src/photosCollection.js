@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { ListView } from './components/gridCollection';
 import { ENDPOINT, ACCESS_KEY } from '../config/config';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 class PhotoCollection extends React.PureComponent {
@@ -55,9 +56,19 @@ class PhotoCollection extends React.PureComponent {
                     <Text style={[styles.subHeader, { color: theme.PRIMARY_TEXT }]}>
                         {"Collections".toUpperCase()}
                     </Text>
-                    <Text style={[styles.header, { color: theme.SECONDARY_TEXT }]}>
-                        Plants
-                    </Text>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <Text style={[styles.header, { color: theme.SECONDARY_TEXT }]}>
+                            Plants
+                        </Text>
+                        <View style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            paddingHorizontal: 10
+                        }}>
+                            <Icon name="view-carousel" color="white" size={32} style={{ marginRight: 20 }}></Icon>
+                            <Icon name="grid-view" color="white" size={30}></Icon>
+                        </View>
+                    </View>
                 </View>
                 <SafeAreaView style={{
                     alignItems: 'center',
@@ -77,7 +88,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         padding: 10,
-        marginTop: 20
+        marginTop: 10,
     },
     subHeader: {
         fontSize: 18,

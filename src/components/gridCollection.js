@@ -58,7 +58,8 @@ export const ListView = ({ data, theme }) => {
                         <Animated.View style={[styles.container, {
                             transform: [
                                 { scale: scale }
-                            ]
+                            ],
+                            opacity: scale
                         }]}>
                             <Image
                                 style={styles.itemContainer}
