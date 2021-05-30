@@ -8,12 +8,12 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const IconButton = ({ icon, theme }) => {
+
     return (
-        <TouchableOpacity
-            activeOpacity={0.5}
+        <View
             style={[styles.container, { backgroundColor: theme.PRIMARY_BACKGROUND }]}>
             <Icon name={icon} size={30} color={theme.SECONDARY_TEXT}></Icon>
-        </TouchableOpacity>
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -24,5 +24,6 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
+        margin: 5
     }
 })

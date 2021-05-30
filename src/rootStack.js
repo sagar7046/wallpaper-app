@@ -8,6 +8,7 @@ import Home from './homeScreen';
 import PhotoCollection from './photosCollection';
 import { TabBar } from './components/tabBar';
 import { connect, useSelector } from 'react-redux';
+import ImagePreview from './imagePreviewScreen';
 
 export const Search = () => {
     return <View><Text>Search API</Text></View>
@@ -36,6 +37,14 @@ export const StackContainer = () => {
                 }}
                 component={PhotoCollection}
             />
+            <Stack.Screen
+                name="image-preview"
+                component={ImagePreview}
+                options={{
+                    headerShown: false,
+                }}
+            />
+
         </Stack.Navigator>
     )
 }

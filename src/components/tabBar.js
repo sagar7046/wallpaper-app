@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
     View,
     TouchableOpacity,
@@ -16,19 +16,55 @@ const SPACING = width * 0.1;
 export const TabBar = ({ state, descriptors, navigation, theme }) => {
 
     const rotateIcon = useRef(new Animated.Value(0)).current;
+    const [isAnimate, setIsAnimate] = useState(false);
+    const animateUploadButton = useRef(new Animated.Value(0)).current;
+    const animateCollection = useRef(new Animated.Value(0)).current;
 
-    function rotateAnimation(toValue) {
-        return (
-            Animated.timing(rotateIcon,
-                {
-                    toValue,
-                    useNativeDriver: true,
-                    duration: 500
-                }
-            ).start(() => {
-                rotateIcon == 0 ? rotateAnimation(1) : rotateAnimation(0)
-            })
-        )
+    function animateUpload(valueToAnimate, toValue) {
+        Animated.timing(
+            valueToAnimate,
+            {
+                toValue,
+                useNativeDriver: false,
+                duration: 500
+            }
+        ).start();
+    }
+    function rotateAnimation() {
+        if (isAnimate) {
+            Animated.parallel([
+                Animated.timing(rotateIcon,
+                    {
+                        toValue: 0,
+                        useNativeDriver: true,
+                        duration: 500
+                    }
+                ).start(),
+                animateUpload(animateUploadButton, 0),
+                animateUpload(animateCollection, 0)
+            ]).start();
+
+        }
+        else {
+            Animated.parallel([
+                Animated.timing(rotateIcon,
+                    {
+                        toValue: 1,
+                        useNativeDriver: true,
+                        duration: 500
+                    }
+                ).start(),
+                animateUpload(animateUploadButton, -100),
+                animateUpload(animateCollection, -70)
+            ]).start();
+
+        }
+    }
+
+    function handleButtonAnimation() {
+        const setAnimateValue = isAnimate ? false : true;
+        setIsAnimate(setAnimateValue);
+        rotateAnimation();
     }
 
     return (
@@ -42,6 +78,7 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                             ? options.title
                             : route.name;
                 const isFocused = state.index === index;
+
                 const onPress = () => {
                     Animated.spring(translateValue, {
                         toValue: index * tabWidth,
@@ -94,21 +131,58 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                     <TouchableOpacity
                         style={styles.tab}
                         key={index}
-                        onPress={() => rotateAnimation(1)}
                     >
                         {
                             label === "wishlist" ?
-                                <Animated.View style={{
-                                    height: 70,
-                                    width: 70,
-                                    backgroundColor: "red",
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    borderRadius: 60,
-                                    transform: [{ rotate }]
-                                }}>
-                                    <Icon name={icon} color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
-                                </Animated.View> :
+                                <>
+                                    <Animated.View
+                                        style={{
+                                            position: "absolute",
+                                            backgroundColor: "black",
+                                            height: 50,
+                                            width: 50,
+                                            top: animateUploadButton,
+                                            borderRadius: 50,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Icon name="upload" color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
+                                    </Animated.View>
+                                    {/* <Animated.View
+                                        style={{
+                                            position: "absolute",
+                                            backgroundColor: "black",
+                                            height: 50,
+                                            width: 50,
+                                            top: animateCollection,
+                                            left: animateCollection,
+                                            borderRadius: 50,
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <Icon name="upload" color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
+                                    </Animated.View> */}
+                                    <TouchableOpacity
+                                        activeOpacity={1}
+                                        onPress={() => handleButtonAnimation()}
+                                    >
+                                        <Animated.View style={{
+                                            height: 75,
+                                            width: 75,
+                                            backgroundColor: theme.PRIMARY_BACKGROUND,
+                                            justifyContent: 'center',
+                                            borderColor: theme.SECONDARY_TEXT,
+                                            borderWidth: 4,
+                                            alignItems: 'center',
+                                            borderRadius: 75,
+                                            transform: [{ rotate }]
+                                        }}>
+                                            <Icon name={icon} color={theme.SECONDARY_TEXT} size={30}></Icon>
+                                        </Animated.View>
+                                    </TouchableOpacity>
+                                </> :
                                 <View style={
                                     isFocused ?
                                         [styles.activeItem, { backgroundColor: theme.SECONDARY_TEXT }] :
@@ -129,7 +203,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         height: 60,
         position: "absolute",
-        bottom: 10,
+        bottom: 15,
         left: SPACING / 2,
         borderRadius: 10,
         width: TAB_WIDTH,

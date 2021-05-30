@@ -65,8 +65,8 @@ class PhotoCollection extends React.PureComponent {
                             alignItems: "center",
                             paddingHorizontal: 10
                         }}>
-                            <Icon name="view-carousel" color="white" size={32} style={{ marginRight: 20 }}></Icon>
-                            <Icon name="grid-view" color="white" size={30}></Icon>
+                            <Icon name="view-carousel" color={theme.SECONDARY_TEXT} size={32} style={{ marginRight: 20 }}></Icon>
+                            <Icon name="grid-view" color={theme.SECONDARY_TEXT} size={30}></Icon>
                         </View>
                     </View>
                 </View>
@@ -75,7 +75,7 @@ class PhotoCollection extends React.PureComponent {
                     justifyContent: 'center',
                     flex: 1
                 }}>
-                    <ListView data={this.state.usersPhotoCollection} theme={theme}></ListView>
+                    <ListView data={this.state.usersPhotoCollection} theme={theme} navigation={this.props.navigation}></ListView>
                 </SafeAreaView>
             </View>
         )
