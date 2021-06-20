@@ -1,6 +1,7 @@
 package com.animationexample;
 
 import android.app.Application;
+import androidx.multidex.MultiDexApplication;
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.reactnativecommunity.cameraroll.CameraRollPackage;
 import com.rnfs.RNFSPackage;
@@ -14,7 +15,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends MultiDexApplication  implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
