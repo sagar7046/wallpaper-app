@@ -13,3 +13,10 @@ export const switchLanguage = (lang) => {
         language: lang
     }
 }
+
+export const setWishlist = (wishlist) => {
+    return {
+        type: action.SET_WISHLIST,
+        wishlist: wishlist
+    }
+}

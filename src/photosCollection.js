@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import { ListView } from './components/gridCollection';
 import { ENDPOINT, ACCESS_KEY } from '../config/config';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import * as AppActions from '../redux/themeActions';
+import { bindActionCreators } from '@reduxjs/toolkit';
 
 
 class PhotoCollection extends React.PureComponent {
@@ -75,7 +77,12 @@ class PhotoCollection extends React.PureComponent {
                     justifyContent: 'center',
                     flex: 1
                 }}>
-                    <ListView data={this.state.usersPhotoCollection} theme={theme} navigation={this.props.navigation}></ListView>
+                    <ListView
+                        data={this.state.usersPhotoCollection}
+                        theme={theme}
+                        action={this.props.actions}
+                        navigation={this.props.navigation}>
+                    </ListView>
                 </SafeAreaView>
             </View>
         )
@@ -106,5 +113,9 @@ export const MapStateToProps = (state) => {
     return { theme };
 }
 
-export default connect(MapStateToProps)(PhotoCollection);
+const mapDispatchProps = (dispatch) => {
+    return { actions: bindActionCreators(AppActions, dispatch) };
+}
+
+export default connect(MapStateToProps, mapDispatchProps)(PhotoCollection);
 

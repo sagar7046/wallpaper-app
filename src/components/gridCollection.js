@@ -23,17 +23,21 @@ const ICON_SPACING = 5;
 const ICON_SIZE = 30;
 const ICON_CONTAINER_HIEGHT = ICON_SIZE * 3 + ICON_SPACING * 3;
 
-export const ListView = ({ data, theme, navigation }) => {
+export const ListView = ({ data, theme, navigation, action }) => {
     const scrollX = React.useRef(new Animated.Value(0)).current;
     const items = [{ urls: "", id: 'dumm1' }, ...data, { key: 10, urls: "", id: 'dummy2' }]
     const [isLiked, setIsliked] = React.useState(false);
     const [isImageLoaded, setImageLoaded] = React.useState(false);
 
+    const [counter, setCounter] = React.useState(0);
+
     const handleLike = () => {
         setIsliked(true)
         setTimeout(() => {
             setIsliked(false)
-        }, 3000)
+        }, 3000);
+        setCounter(counter + 1);
+        action.setWishlist({ "wishlist": counter });
     }
 
     const handleShare = async (imageUrl) => {

@@ -2,18 +2,16 @@ import * as React from 'react';
 import {
     View,
     StyleSheet,
-    Text, Button, TouchableOpacity, ScrollView, FlatList, RefreshControl, ToastAndroid
+    Text, TouchableOpacity, ScrollView, FlatList, ToastAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import * as AppActions from '../redux/themeActions';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { darkTheme, lightTheme } from '../config/Theme';
-import { hindi, english } from '../config/strings';
 import ImageView from './components/ImageList';
 import { DAY, MONTH } from '../utility/utility';
 import { ENDPOINT, ACCESS_KEY } from '../config/config';
-import { ToggleTheme } from './components/toggleSwitch';
 
 
 const day = DAY.filter(item => item.key == new Date().getDay());
@@ -29,7 +27,6 @@ class Home extends React.PureComponent {
         page: 1
     }
     fetchData = (isRefresh = false) => {
-        console.log(isRefresh);
         fetch(`${ENDPOINT}photos?page=${this.state.page}&client_id=${ACCESS_KEY}`)
             .then(res => res.json())
             .then(result => {
@@ -60,7 +57,6 @@ class Home extends React.PureComponent {
     }
     render() {
         const { language, theme } = this.props.theme;
-        const { actions } = this.props;
 
         return (
             <View style={[styles.container, { backgroundColor: theme.PRIMARY_BACKGROUND }]} >
