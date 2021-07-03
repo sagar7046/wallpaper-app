@@ -8,6 +8,8 @@ const ImageView = ({ data, theme, navigation }) => {
     const thumbnailOpacity = React.useRef(new Animated.Value(0)).current;
     const imageOpacity = React.useRef(new Animated.Value(0)).current;
 
+    console.log(data.user.username);
+
     function capitalize(s) {
         return s[0].toUpperCase() + s.slice(1);
     }

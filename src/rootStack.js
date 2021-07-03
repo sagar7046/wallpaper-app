@@ -51,8 +51,9 @@ export const StackContainer = () => {
 
 export const RootStack = () => {
     const theme = useSelector(state => state.theme.theme);
-    console.log(theme);
+
     const Tab = createBottomTabNavigator();
+
     return (
         <Tab.Navigator
             tabBar={(props) => <TabBar {...props} theme={theme}></TabBar>}

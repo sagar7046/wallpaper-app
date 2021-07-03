@@ -149,21 +149,6 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                                     >
                                         <Icon name="upload" color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
                                     </Animated.View>
-                                    {/* <Animated.View
-                                        style={{
-                                            position: "absolute",
-                                            backgroundColor: "black",
-                                            height: 50,
-                                            width: 50,
-                                            top: animateCollection,
-                                            left: animateCollection,
-                                            borderRadius: 50,
-                                            justifyContent: 'center',
-                                            alignItems: 'center'
-                                        }}
-                                    >
-                                        <Icon name="upload" color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
-                                    </Animated.View> */}
                                     <TouchableOpacity
                                         activeOpacity={1}
                                         onPress={() => handleButtonAnimation()}

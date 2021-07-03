@@ -3,6 +3,7 @@ import {
   StatusBar,
   PermissionsAndroid,
   Platform,
+  NativeModules
 } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore } from '@reduxjs/toolkit';
@@ -10,13 +11,16 @@ import themeReducer from './redux/themeReducer';
 import { RootStack } from './src/rootStack';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from './src/homeScreen';
-import { StackContainer } from './src/rootStack'
+import { StackContainer } from './src/rootStack';
+import PhotoCollection from './src/photosCollection';
 const store = createStore(themeReducer);
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 
-
 const App = () => {
+
+  const { ABC } = NativeModules;
+
   const configurePermission = async () => {
     if (Platform.OS == "android") {
       try {
@@ -41,6 +45,10 @@ const App = () => {
 
   useEffect(() => {
 
+    ABC.show()
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+
     //ask for permission
     configurePermission();
 
@@ -58,11 +66,15 @@ const App = () => {
         android: {
           channelId: "wallpaper",
           color: '#4caf50',
+          showTimestamp: true,
           smallIcon: "ic_small_icon",
           actions: [
             {
               title: "Yes",
-              pressAction: { id: "12" }
+              pressAction: {
+                id: 'xps',
+                mainComponent: "PhotoCollection"
+              },
             },
             {
               title: "No",
@@ -83,7 +95,8 @@ const App = () => {
       lights: true,
       vibration: true,
       importance: AndroidImportance.HIGH,
-      badge: true
+      badge: true,
+      description: "This is a description about the notification."
     })
   }
 
@@ -91,7 +104,24 @@ const App = () => {
     <>
       <Provider store={store}>
         <StatusBar barStyle="light-content" />
-        <NavigationContainer>
+        <NavigationContainer
+          linking={{
+            prefixes: ["demoapp://", "https://www.demoapp.com"],
+            enabled: true,
+            config: {
+              screens: {
+                Home: {
+                  screens: {
+                    view: {
+                      path: "view/:userName",
+                      parse: { userName: String }
+                    }
+                  }
+                }
+              }
+            }
+          }}
+        >
           <RootStack></RootStack>
         </NavigationContainer>
       </Provider>
