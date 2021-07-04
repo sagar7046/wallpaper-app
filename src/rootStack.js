@@ -9,6 +9,7 @@ import PhotoCollection from './photosCollection';
 import { TabBar } from './components/tabBar';
 import { connect, useSelector } from 'react-redux';
 import ImagePreview from './imagePreviewScreen';
+import UserProfile from './profileScreen';
 
 export const Search = () => {
     return <View><Text>Search API</Text></View>
@@ -57,17 +58,12 @@ export const RootStack = () => {
     return (
         <Tab.Navigator
             tabBar={(props) => <TabBar {...props} theme={theme}></TabBar>}
-            sceneContainerStyle={{
-                justifyContent: 'center',
-                flex: 1,
-                backgroundColor: "yellow"
-            }}
         >
             <Tab.Screen name="Home" component={StackContainer}></Tab.Screen>
             <Tab.Screen name="Seacrh" component={Search}></Tab.Screen>
             <Tab.Screen name="wishlist" component={Search}></Tab.Screen>
             <Tab.Screen name="notifications" component={Search}></Tab.Screen>
-            <Tab.Screen name="profile" component={Search}></Tab.Screen>
+            <Tab.Screen name="profile" component={UserProfile}></Tab.Screen>
         </Tab.Navigator >
     )
 }

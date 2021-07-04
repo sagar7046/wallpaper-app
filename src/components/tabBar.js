@@ -5,7 +5,8 @@ import {
     StyleSheet,
     Text,
     Dimensions,
-    Animated
+    Animated,
+    Pressable
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -26,7 +27,7 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
             {
                 toValue,
                 useNativeDriver: false,
-                duration: 500
+                duration: 100
             }
         ).start();
     }
@@ -37,7 +38,7 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                     {
                         toValue: 0,
                         useNativeDriver: true,
-                        duration: 500
+                        duration: 100
                     }
                 ).start(),
                 animateUpload(animateUploadButton, 0),
@@ -51,7 +52,7 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                     {
                         toValue: 1,
                         useNativeDriver: true,
-                        duration: 500
+                        duration: 100
                     }
                 ).start(),
                 animateUpload(animateUploadButton, -100),
@@ -80,11 +81,6 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                 const isFocused = state.index === index;
 
                 const onPress = () => {
-                    Animated.spring(translateValue, {
-                        toValue: index * tabWidth,
-                        useNativeDriver: false
-                    }).start();
-
                     const event = navigation.emit({
                         type: "tabPress",
                         target: route.key,
@@ -102,6 +98,8 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                         });
                     };
                 }
+
+
                 var icon = ''
                 switch (label) {
                     case "Home":
@@ -144,7 +142,7 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                                             top: animateUploadButton,
                                             borderRadius: 50,
                                             justifyContent: 'center',
-                                            alignItems: 'center'
+                                            alignItems: 'center',
                                         }}
                                     >
                                         <Icon name="upload" color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
@@ -168,13 +166,19 @@ export const TabBar = ({ state, descriptors, navigation, theme }) => {
                                         </Animated.View>
                                     </TouchableOpacity>
                                 </> :
-                                <View style={
-                                    isFocused ?
-                                        [styles.activeItem, { backgroundColor: theme.SECONDARY_TEXT }] :
-                                        styles.tabItem}
+                                <TouchableOpacity
+                                    onPress={onPress}
                                 >
-                                    <Icon name={icon} color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
-                                </View>
+                                    <View
+                                        style={
+                                            isFocused ?
+                                                [styles.activeItem, { backgroundColor: theme.SECONDARY_TEXT }] :
+                                                styles.tabItem
+                                        }
+                                    >
+                                        <Icon name={icon} color={theme.PRIMARY_BACKGROUND} size={25}></Icon>
+                                    </View>
+                                </TouchableOpacity>
                         }
                     </TouchableOpacity>
                 )
@@ -208,11 +212,12 @@ const styles = StyleSheet.create({
         borderRadius: 40,
     },
     activeItem: {
-        height: 40,
+        height: 46,
         justifyContent: 'center',
-        width: 40,
+        width: 46,
         alignItems: 'center',
-        borderRadius: 40,
+        // borderRadius: 40,
+        borderRadius: 23,
         elevation: 12
     }
 });
