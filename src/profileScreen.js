@@ -1,9 +1,7 @@
 import React from 'react';
 import {
     Text,
-    View,
-    StyleSheet,
-    StatusBar
+    View
 } from 'react-native';
 import { connect } from 'react-redux';
 import { ENDPOINT, ACCESS_KEY } from '../config/config';

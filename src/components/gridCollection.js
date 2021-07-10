@@ -23,12 +23,13 @@ const ICON_SPACING = 5;
 const ICON_SIZE = 30;
 const ICON_CONTAINER_HIEGHT = ICON_SIZE * 3 + ICON_SPACING * 3;
 
-export const ListView = ({ data, theme, navigation, action }) => {
+export const ListView = ({ data, theme, route, action, activeindex }) => {
+
     const scrollX = React.useRef(new Animated.Value(0)).current;
-    const items = [{ urls: "", id: 'dumm1' }, ...data, { key: 10, urls: "", id: 'dummy2' }]
+    const items = [{ urls: "", id: 'dumm1', key: 1 }, ...data, { key: 10, urls: "", id: 'dummy2' }]
     const [isLiked, setIsliked] = React.useState(false);
     const [isImageLoaded, setImageLoaded] = React.useState(false);
-
+    const flatListRef = React.useRef(null);
     const [counter, setCounter] = React.useState(0);
 
     const handleLike = () => {
@@ -40,11 +41,14 @@ export const ListView = ({ data, theme, navigation, action }) => {
         action.setWishlist({ "wishlist": counter });
     }
 
-    const handleShare = async (imageUrl) => {
+    const handleShare = async (imageUrl, id) => {
+        const username = route.params.userName;
+        const URL = `demoapp://view/${username}/${id}`;
+        console.log(URL);
         const shareResult = await Share.share({
-            message: "MyWallpaper ! Hey, check out this amazing wallpaper" + imageUrl,
+            message: "MyWallpaper ! Hey, check out this amazing wallpaper \n" + URL,
             title: "My Wallpaper",
-            url: imageUrl
+            url: URL
         })
 
         if (shareResult.action == Share.sharedAction) {
@@ -71,8 +75,28 @@ export const ListView = ({ data, theme, navigation, action }) => {
         })
     }
 
+
+    React.useEffect(() => {
+        try {
+            if (items.length > 2 && route.params.id != null) {
+
+                const id = route.params.id;
+                const targetIndex = items.indexOf(items.filter(item => item.id === id)[0]);
+
+                flatListRef.current.scrollToIndex({
+                    index: targetIndex - 1,
+                    animated: true
+                })
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    })
+
     return (
         <Animated.FlatList
+            ref={flatListRef}
             data={items}
             horizontal
             onScroll={Animated.event(
@@ -81,6 +105,24 @@ export const ListView = ({ data, theme, navigation, action }) => {
             )}
             snapToInterval={IMAGE_WIDTH}
             pagingEnabled
+            getItemLayout={(data, index) => {
+                var length = 0;
+                var offset = 0;
+
+                if (index == 0 || index == items.length - 1) {
+                    length = SPACING
+                    offset = SPACING
+                } else {
+                    length = IMAGE_HEIGHT
+                    offset = IMAGE_WIDTH
+                }
+
+                return {
+                    length: length,
+                    offset: offset * index,
+                    index
+                }
+            }}
             decelerationRate={'normal'}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item.id}
@@ -158,7 +200,7 @@ export const ListView = ({ data, theme, navigation, action }) => {
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         activeOpacity={0.8}
-                                        onPress={() => handleShare(item.urls.regular)}
+                                        onPress={() => handleShare(item.urls.regular, item.id)}
                                     >
                                         <IconButton icon="share" theme={theme}></IconButton>
                                     </TouchableOpacity>

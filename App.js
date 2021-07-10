@@ -35,7 +35,7 @@ const App = () => {
         }
       }
       catch (error) {
-        console.warn(error);
+        console.log("Error while asking for permission", error);
       }
     }
   }
@@ -110,8 +110,11 @@ const App = () => {
                 Home: {
                   screens: {
                     view: {
-                      path: "view/:userName",
-                      parse: { userName: String }
+                      path: "view/:userName/:id",
+                      parse: {
+                        userName: String,
+                        id: String
+                      }
                     }
                   }
                 }

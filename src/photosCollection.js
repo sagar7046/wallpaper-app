@@ -35,9 +35,9 @@ class PhotoCollection extends React.PureComponent {
     }
 
     componentDidMount() {
-        const { route } = this.props
         this.componentMounted = true;
         if (this.componentMounted) {
+            const { route } = this.props;
             this.fetchData(route.params.userName);
         }
     }
@@ -81,7 +81,7 @@ class PhotoCollection extends React.PureComponent {
                         data={this.state.usersPhotoCollection}
                         theme={theme}
                         action={this.props.actions}
-                        navigation={this.props.navigation}>
+                        route={this.props.route}>
                     </ListView>
                 </SafeAreaView>
             </View>

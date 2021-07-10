@@ -8,8 +8,6 @@ const ImageView = ({ data, theme, navigation }) => {
     const thumbnailOpacity = React.useRef(new Animated.Value(0)).current;
     const imageOpacity = React.useRef(new Animated.Value(0)).current;
 
-    console.log(data.user.username);
-
     function capitalize(s) {
         return s[0].toUpperCase() + s.slice(1);
     }
@@ -36,7 +34,8 @@ const ImageView = ({ data, theme, navigation }) => {
         <TouchableOpacity
             style={styles.container}
             onPress={() => navigation.navigate("view", {
-                userName: data.user.username
+                userName: data.user.username,
+                id: null
             })}
         >
             <View style={{
